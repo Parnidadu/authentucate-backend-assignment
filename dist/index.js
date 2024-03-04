@@ -11,9 +11,9 @@ const search_routes_1 = __importDefault(require("./src/routes/search-routes"));
 const app = (0, express_1.default)();
 const PORT = 3000;
 app.use(express_1.default.json());
+app.use('/api', search_routes_1.default);
 app.use('/api', user_routes_1.default);
 app.use('/api', contacts_routes_1.default);
-app.get('/api/search', search_routes_1.default);
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });

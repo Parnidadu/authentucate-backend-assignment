@@ -1,19 +1,16 @@
-// searchController.ts
 
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
-
-const searchController = async (req: Request, res: Response) => {
+export const searchController = async (req: Request, res: Response) => {
   try {
     const { query } = req.params;
-
     // Search for users by name or phone number
     const userResults = await prisma.user.findMany({
       where: {
         OR: [
-          { name: { contains: query } },
+          { name: { contains: query, mode: 'insensitive'} },
           { phoneNumber: { contains: query } },
         ],
       },
@@ -28,7 +25,7 @@ const searchController = async (req: Request, res: Response) => {
     const contactResults = await prisma.contacts.findMany({
       where: {
         OR: [
-          { name: { contains: query } },
+          { name: { contains: query, mode: 'insensitive' } },
           { phoneNumber: { contains: query } },
         ],
       },
@@ -36,6 +33,7 @@ const searchController = async (req: Request, res: Response) => {
         id: true,
         name: true,
         phoneNumber: true,
+        isSpam: true
       },
     });
 
@@ -48,4 +46,3 @@ const searchController = async (req: Request, res: Response) => {
   }
 };
 
-export default searchController;

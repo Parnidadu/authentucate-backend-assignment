@@ -5,18 +5,16 @@ import prisma from '../utils/database';
 interface Contact {
   name: string;
   phoneNumber: string;
+  isSpam?: boolean;
 }
 
 export const createUser = async (req: Request, res: Response) => {
   try {
     const { name, phoneNumber, contacts }: { name: string; phoneNumber: string; contacts?: Contact[] } = req.body;
-
-    // Create the user
     const newUser = await prisma.user.create({
       data: { name, phoneNumber },
     });
 
-    // If contacts are provided, associate them with the user
     if (contacts && contacts.length > 0) {
       const contactsData = contacts.map((contact) => ({
         ...contact,

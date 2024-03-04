@@ -1,5 +1,4 @@
 "use strict";
-// searchController.ts
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -10,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.searchController = void 0;
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 const searchController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -19,7 +19,7 @@ const searchController = (req, res) => __awaiter(void 0, void 0, void 0, functio
         const userResults = yield prisma.user.findMany({
             where: {
                 OR: [
-                    { name: { contains: query } },
+                    { name: { contains: query, mode: 'insensitive' } },
                     { phoneNumber: { contains: query } },
                 ],
             },
@@ -33,7 +33,7 @@ const searchController = (req, res) => __awaiter(void 0, void 0, void 0, functio
         const contactResults = yield prisma.contacts.findMany({
             where: {
                 OR: [
-                    { name: { contains: query } },
+                    { name: { contains: query, mode: 'insensitive' } },
                     { phoneNumber: { contains: query } },
                 ],
             },
@@ -41,6 +41,7 @@ const searchController = (req, res) => __awaiter(void 0, void 0, void 0, functio
                 id: true,
                 name: true,
                 phoneNumber: true,
+                isSpam: true
             },
         });
         res.json({ userResults, contactResults });
@@ -53,4 +54,4 @@ const searchController = (req, res) => __awaiter(void 0, void 0, void 0, functio
         yield prisma.$disconnect();
     }
 });
-exports.default = searchController;
+exports.searchController = searchController;

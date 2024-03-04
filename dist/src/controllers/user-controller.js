@@ -17,11 +17,9 @@ const database_1 = __importDefault(require("../utils/database"));
 const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { name, phoneNumber, contacts } = req.body;
-        // Create the user
         const newUser = yield database_1.default.user.create({
             data: { name, phoneNumber },
         });
-        // If contacts are provided, associate them with the user
         if (contacts && contacts.length > 0) {
             const contactsData = contacts.map((contact) => (Object.assign(Object.assign({}, contact), { authorId: newUser.id })));
             yield database_1.default.contacts.createMany({
